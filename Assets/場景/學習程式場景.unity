@@ -123,6 +123,57 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &200614258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 200614260}
+  - component: {fileID: 200614259}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &200614259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200614258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b7ff2b94c6c2eb4c90d877f3349896e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  a: 10
+  b: 3
+  c: 0
+  scare_a: 99
+  scare_b: 1
+  hp: 100
+  key: 1
+  "\u904E\u95DC": 0
+--- !u!4 &200614260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200614258}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.49936616, y: -1.0642316, z: -4.333755}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1053870949
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +286,7 @@ MonoBehaviour:
   attatk: 323
   jump: 325
   dodge: 324
-  camera: {fileID: 1640924209}
+  camera0: {fileID: 1640924209}
   "\u4F4D\u7F6E": {fileID: 0}
   "\u5716": {fileID: 0}
 --- !u!1 &1375481057
@@ -255,7 +306,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1375481058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,7 +336,7 @@ MonoBehaviour:
   attatk: 323
   jump: 325
   dodge: 324
-  camera: {fileID: 0}
+  camera0: {fileID: 1640924209}
   "\u4F4D\u7F6E": {fileID: 0}
   "\u5716": {fileID: 0}
 --- !u!212 &1375481059

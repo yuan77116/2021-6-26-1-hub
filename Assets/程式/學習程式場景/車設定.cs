@@ -59,9 +59,19 @@ public class 車設定 : MonoBehaviour
     public KeyCode jump=KeyCode.Mouse2;
     public KeyCode dodge=KeyCode.Mouse1;
     #endregion
-    #region 物件
-    public GameObject camera;
+    #region 加入物件
+    public GameObject camera0;
     public Transform 位置;
     public SpriteRenderer 圖;
+    #endregion
+    #region 事件
+    private void Start()
+    {
+        print("hollow word");
+    }
+    private void Update()
+    {
+        print("斗內現場");
+    }
     #endregion
 }
