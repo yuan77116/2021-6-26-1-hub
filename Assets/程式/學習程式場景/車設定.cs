@@ -74,6 +74,11 @@ public class 車設定 : MonoBehaviour
         開車_Drive(120, "ㄚㄚ~");
         開車_Drive(50);
         開車_Drive(80, 特效_effect:"下雨");
+
+        float kg = KG();
+        print("轉為公金資訊：" + kg);
+
+        print("你的BMI值為：" + BMI(54,1.596f));
     }
     private void Update()
     {
@@ -95,14 +100,31 @@ public class 車設定 : MonoBehaviour
     ///速度.音效.特效
     /// </summary>
     ///<param name="速度_speed">車子的移動速度</param>
-    ///<param name="音效">開車音效</param>
+    ///<param name="音效_sound">開車音效</param>
     ///<param name="特效_effect">場景畫面此時的特效</param>
 
-    private void 開車_Drive(float 速度_speed,string 音效 = "嚕嚕",string 特效_effect ="灰塵")
+    private void 開車_Drive(float 速度_speed,string 音效_sound = "嚕嚕",string 特效_effect ="灰塵")
     {
         print("開車中" + "時速"+ 速度_speed);
-        print("開車音效 = " + 音效);
+        print("開車音效 = " + 音效_sound);
         print("畫面特效 = "+特效_effect);
     }
+    ///<summary>
+    ///轉為公斤資訊
+    /// </summary>
+    private float KG()
+    {
+        return weight = 1000;
+    }
+    ///<summary>
+    ///計算BMI
+    /// </summary>
+    /// ///<param name="weight">公斤體重</param>
+    ///<param name="height">身高公尺</param>
+    private float BMI(float weight,float height)
+    {
+        return weight/(height*height);
+    }
     #endregion
+    
 }
