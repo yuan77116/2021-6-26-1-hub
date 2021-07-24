@@ -68,10 +68,41 @@ public class 車設定 : MonoBehaviour
     private void Start()
     {
         print("hollow word");
+        開車_Drive50();
+        開車_Drive100();
+        開車_Drive(100,"咻咻~");
+        開車_Drive(120, "ㄚㄚ~");
+        開車_Drive(50);
+        開車_Drive(80, 特效_effect:"下雨");
     }
     private void Update()
     {
         print("斗內現場");
+    }
+    #endregion
+    #region 方法_Method
+    // void =無傳回
+
+    private void 開車_Drive50()
+    {
+        print("開車中"+ "時速50");
+    }
+    private void 開車_Drive100()
+    {
+        print("開車中" + "時速100");
+    }
+    ///<summary>
+    ///速度.音效.特效
+    /// </summary>
+    ///<param name="速度_speed">車子的移動速度</param>
+    ///<param name="音效">開車音效</param>
+    ///<param name="特效_effect">場景畫面此時的特效</param>
+
+    private void 開車_Drive(float 速度_speed,string 音效 = "嚕嚕",string 特效_effect ="灰塵")
+    {
+        print("開車中" + "時速"+ 速度_speed);
+        print("開車音效 = " + 音效);
+        print("畫面特效 = "+特效_effect);
     }
     #endregion
 }
