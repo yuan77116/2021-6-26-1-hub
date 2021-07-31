@@ -1,0 +1,21 @@
+Using pre-set license
+Built from '2020.3/staging' branch; Version is '2020.3.13f1 (71691879b7f5) revision 7432472'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 19043.1110; Version 2009; 64bit' Language: 'zh' Physical Memory: 3979 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+ COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2020.3.13f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker1
+-projectPath
+C:/Users/user/Desktop/Unity 3D作品存放/6-26-1/2021-6-26-1-hub
+-logFile
+Logs/AssetImportWorker1.log
+-srvPort
+49801
+Successfully changed project path to: C:/Users/user/Desktop/Unity 3D作品存放/6-26-1/2021-6-26-1-hub
+C:/Users/user/Desktop/Unity 3D作品存放/6-26-1/2021-6-26-1-hub
+Using Asset Import Pipeline V2.
