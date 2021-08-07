@@ -4,14 +4,20 @@ public class player : MonoBehaviour
 {
     #region 課堂練習
 
-    [Header("移動速度"), Range(0, 100)]
-    public float speed = 10.5f;
-    [Header("跳躍高度"), Range(0, 30)]
-    public int playerjump = 10;
+    [Header("移動速度"), Range(0, 300)]
+    public float speed = 150;
+    [Header("跳躍高度"), Range(0, 10)]
+    public int playerjump = 2;
     [Header("血量"), Range(0, 200)]
     public float hp = 100;
     [Header("是否在地板上"), Tooltip("碰到地板?")]
     public bool isground = false;
+    [Header("檢查地板區域：位移與半徑")]
+    public Vector3 groundOffest;
+    [Range(0, 2)]
+    public float groundRadius = 0.5f;
+    [Header("2段跳")]
+    private int jump2 = 0;
 
     private AudioSource aud;
     private Rigidbody2D rig;
@@ -31,6 +37,7 @@ public class player : MonoBehaviour
         //Dead();
         //ErtProp("肉");
         rig = GetComponent<Rigidbody2D>();
+        ani = GetComponent<Animator>();
     }
     //不穩定60次
     private void Update()
@@ -69,9 +76,12 @@ public class player : MonoBehaviour
     /// </summary>
     /// ///<param name="horizontal">角色移動方向</param>
     private void Move(float horizontal)
-    {
-        Vector2 posMove = transform.position + new Vector3(horizontal,-gravity,0) * speed * Time.fixedDeltaTime;
-        rig.MovePosition(posMove);
+    {       /**第一種寫法 自訂重力
+            //Vector2 posMove = transform.position + new Vector3(horizontal,-gravity,0) * speed * Time.fixedDeltaTime;
+            rig.MovePosition(posMove);**/
+        //第二種寫法 物理加速度效果 (移速要增加.跳躍要減少)
+        rig.velocity = new Vector2(horizontal * speed * Time.fixedDeltaTime, rig.velocity.y);
+        ani.SetBool("走路", horizontal!=0);
     }
     [Header("負重力"),Range(0.01f,1)]
     public float gravity=0.45f;
@@ -80,10 +90,21 @@ public class player : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        Collider2D hit = Physics2D.OverlapCircle(transform.position + groundOffest, groundRadius,1<<6); //也可用v3 1<<6 使用的圖層 [ <<位移運算子 1<<圖層編號 ]
+        if (hit)
         {
+            print("碰到的物件 " + hit);
+            isground = true;
+            jump2 = 0;
+        }
+        else isground = false;
+
+        if (Input.GetKeyDown(KeyCode.K)&& jump2!=2)
+        {
+            jump2++;
             rig.AddForce(new Vector2(0, playerjump*200));
         }
+        ani.SetBool("跳躍", !isground);
     }
     ///<summary>
     ///攻擊
@@ -115,6 +136,12 @@ public class player : MonoBehaviour
     {
         print("吃到：" + 道具名稱);
     }
-
+    //繪製圖示事件
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.3f);
+        //Gizmos.DrawSphere(transform.position,2); //(中心點，半徑)
+        Gizmos.DrawSphere(transform.position + groundOffest, groundRadius);
+    }
     #endregion
 }
