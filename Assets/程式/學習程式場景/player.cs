@@ -18,6 +18,16 @@ public class player : MonoBehaviour
     public float groundRadius = 0.5f;
     [Header("2段跳")]
     private int jump2 = 0;
+    [Header("冷卻時間")]
+    private float acd = 1.2f;
+    /// <summary>
+    /// 攻擊計時器
+    /// </summary>
+    private float timer;
+    /// <summary>
+    /// 是否攻擊
+    /// </summary>
+    private bool isatk;
 
     private AudioSource aud;
     private Rigidbody2D rig;
@@ -44,6 +54,7 @@ public class player : MonoBehaviour
     {
         GetPlayerHorizontal();
         Jump();
+        Atk();
     }
     //穩定50次
     private void FixedUpdate()
@@ -111,7 +122,16 @@ public class player : MonoBehaviour
     /// </summary>
     private void Atk()
     {
-        
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            isatk = true;
+            ani.SetTrigger("攻擊");
+        }
+        if (isatk)
+        {
+            timer += Time.deltaTime;
+            print("攻擊累加時間 " + timer);
+        }
     }
     ///<summary>
     ///受傷
