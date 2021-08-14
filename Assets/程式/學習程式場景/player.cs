@@ -112,6 +112,7 @@ public class player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.K)&& jump2!=2)
         {
+            rig.velocity = Vector2.zero;
             jump2++;
             rig.AddForce(new Vector2(0, playerjump*200));
         }
@@ -122,15 +123,23 @@ public class player : MonoBehaviour
     /// </summary>
     private void Atk()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (!isatk && Input.GetKeyDown(KeyCode.J))
         {
             isatk = true;
             ani.SetTrigger("攻擊");
         }
         if (isatk)
         {
-            timer += Time.deltaTime;
-            print("攻擊累加時間 " + timer);
+            if(timer< acd)
+            {
+                timer += Time.deltaTime;
+                //print("攻擊累加時間 " + timer);
+            }
+            else
+            {
+                timer = 0;
+                isatk = false;
+            }
         }
     }
     ///<summary>
