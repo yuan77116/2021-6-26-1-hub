@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class player : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class player : MonoBehaviour
     public int playerjump = 2;
     [Header("血量"), Range(0, 200)]
     public float hp = 100;
+    private float 最大hp;
     [Header("是否在地板上"), Tooltip("碰到地板?")]
     public bool isground = false;
     [Header("檢查地板區域：位移與半徑")]
@@ -32,6 +34,9 @@ public class player : MonoBehaviour
     private AudioSource aud;
     private Rigidbody2D rig;
     private Animator ani;
+
+    private Text 血量hp;
+    private Image 圖片hp;
     #endregion
     #region 方法練習
     //欄位
@@ -48,6 +53,9 @@ public class player : MonoBehaviour
         //ErtProp("肉");
         rig = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
+        血量hp = GameObject.Find("文字血量").GetComponent<Text>();
+        圖片hp = GameObject.Find("血條").GetComponent<Image>();
+        最大hp = hp;
     }
     //不穩定60次
     private void Update()
@@ -61,9 +69,7 @@ public class player : MonoBehaviour
     {
         Move(hValue);
     }
-
     //方法
-
     ///<summary>
     ///x方向
     /// </summary>
@@ -148,14 +154,22 @@ public class player : MonoBehaviour
     /// ///<param name="造成的傷害">角色受了多少傷害</param>
     public void Hurt(float 造成的傷害)
     {
-        
+        hp -= 造成的傷害;
+        if (hp<=0)
+        {
+            Dead();
+        }
+        血量hp.text = "血量 " + hp;
+        圖片hp.fillAmount = (hp / 最大hp);
     }
     ///<summary>
     ///死亡
     /// </summary>
     private void Dead()
     {
-        
+        hp = 0;
+        ani.SetBool("死亡", true);
+        enabled = false;
     }
     ///<summary>
     ///撿起的道具名

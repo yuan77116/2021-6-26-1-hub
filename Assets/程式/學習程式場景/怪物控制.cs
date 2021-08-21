@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 public class 怪物控制 : MonoBehaviour
 {
@@ -10,19 +11,32 @@ public class 怪物控制 : MonoBehaviour
     [Range(1, 500)]
     public float speed;
     [SerializeField]
-    private StateEnemy state;
+    protected StateEnemy state;
 
     private Rigidbody2D rig;
     private Animator ani;
     private AudioSource aud;
+    protected player playerh;
+    protected Collider2D hit;
 
     public Vector2 v2idle = new Vector2(1, 5);
     public Vector2 v2walk = new Vector2(3, 6);
+    [Header("檢查地板")]
+    public Vector2 checkfoor = new Vector2(1, -0.8f);
+    public float checkfoorint=0.3f;
 
     private float timeidle;
     private float timeridle;
     private float timewalk;
     private float timerwalk;
+    private float cdatk=1.2f;
+    [Header("攻擊間隔，自訂攻擊數量")]
+    public float[] atkdelay;
+    [Header("攻擊完成回復")]
+    public float 攻擊回復=1;
+    //[Header("第二次攻擊間隔")]
+    //public float[] atkdelay2;
+    private float timeratk;
 
     //public KeyCode key;
     public enum StateEnemy
@@ -33,14 +47,15 @@ public class 怪物控制 : MonoBehaviour
     private void Start() //初始值設定
     {
         timeidle = Random.Range(v2idle.x, v2idle.y);
-
         rig = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
         aud = GetComponent<AudioSource>();
+        playerh = GameObject.Find("主角").GetComponent<player>();
     }
-    private void Update()
+    protected virtual void Update()
     {
         檢查狀態();
+        檢查地板();
     }
     private void FixedUpdate()
     {
@@ -58,7 +73,7 @@ public class 怪物控制 : MonoBehaviour
                 walk();
                 break;
             case StateEnemy.atkkack:
-
+                攻擊狀態();
                 break;
             case StateEnemy.dead:
 
@@ -69,8 +84,26 @@ public class 怪物控制 : MonoBehaviour
                 break;
         }
     }
+    private void 攻擊狀態()
+    {
+        if (timeratk < cdatk)
+        {
+            timeratk += Time.deltaTime;
+        }
+        else
+        {
+            不同的攻擊();
+        }
+    }
+    protected virtual void 不同的攻擊()
+    {
+        timeratk = 0;
+        ani.SetTrigger("攻擊");
+        print("攻擊");
+    }
     private void idle()
     {
+        rig.constraints = RigidbodyConstraints2D.FreezeAll;
         if (timeridle < timeidle)
         {
             timeridle += Time.deltaTime;
@@ -85,10 +118,10 @@ public class 怪物控制 : MonoBehaviour
             timewalk = Random.Range(v2walk.x, v2walk.y);
             隨機方向();
         }
-
     }
     private void walk()
     {
+        rig.constraints = RigidbodyConstraints2D.FreezeRotation;
         if (timerwalk < timewalk)
         {
             timerwalk += Time.deltaTime;
@@ -108,6 +141,10 @@ public class 怪物控制 : MonoBehaviour
         {
             rig.velocity = transform.right * speed * Time.fixedDeltaTime + Vector3.up * rig.velocity.y;
         }
+        if (state == StateEnemy.idle)
+        {
+            rig.velocity =  Vector3.up * rig.velocity.y;
+        }
     }
     private void 隨機方向()
     {
@@ -115,5 +152,32 @@ public class 怪物控制 : MonoBehaviour
         if (rand == 0) transform.eulerAngles = Vector2.up * 0;
         if (rand == 1) transform.eulerAngles = Vector2.up * 180;
 
+    }
+    private Collider2D[] hits;
+    private Collider2D[] hitresult;
+    private void 檢查地板()
+    {
+        hits= Physics2D.OverlapCircleAll(transform.position + transform.right * checkfoor.x + transform.up * checkfoor.y, checkfoorint);
+        //Collider2D[] hit = Physics2D.OverlapCircleAll(transform.position + transform.right * checkfoor.x + transform.up * checkfoor.y, checkfoorint);
+        hitresult = hits.Where(x => x.name != "拼圖地板Tilemap" && x.name != "跳台Tilemap" && x.name != "可穿透跳台" && x.name != "主角").ToArray();
+
+        if (hits.Length == 0 || hitresult.Length>0)
+        {
+            print("沒有地板或者有障礙物");
+            轉彎();
+        }
+
+    }
+    public void 轉彎()
+    {
+        float y = transform.eulerAngles.y;
+        if (y == 0) transform.eulerAngles =Vector3.up*180;
+        else transform.eulerAngles = Vector3.zero;
+
+    }
+    protected virtual void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1, 0.3f, 0.3f,0.3f);
+        Gizmos.DrawSphere(transform.position+ transform.right * checkfoor.x + transform.up * checkfoor.y, checkfoorint);
     }
 }
