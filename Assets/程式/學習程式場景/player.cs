@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class player : MonoBehaviour
 {
     #region 課堂練習
-
+    [Header("攻擊力"), Range(0, 300)]
+    public float 攻擊力 = 10;
     [Header("移動速度"), Range(0, 300)]
     public float speed = 150;
     [Header("跳躍高度"), Range(0, 10)]
@@ -34,6 +35,7 @@ public class player : MonoBehaviour
     private AudioSource aud;
     private Rigidbody2D rig;
     private Animator ani;
+    private Cameraa1a2 cameraa;
 
     private Text 血量hp;
     private Image 圖片hp;
@@ -56,6 +58,7 @@ public class player : MonoBehaviour
         血量hp = GameObject.Find("文字血量").GetComponent<Text>();
         圖片hp = GameObject.Find("血條").GetComponent<Image>();
         最大hp = hp;
+        cameraa = GameObject.Find("Main Camera").GetComponent<Cameraa1a2>();
     }
     //不穩定60次
     private void Update()
@@ -98,16 +101,16 @@ public class player : MonoBehaviour
             rig.MovePosition(posMove);**/
         //第二種寫法 物理加速度效果 (移速要增加.跳躍要減少)
         rig.velocity = new Vector2(horizontal * speed * Time.fixedDeltaTime, rig.velocity.y);
-        ani.SetBool("走路", horizontal!=0);
+        ani.SetBool("走路", horizontal != 0);
     }
-    [Header("負重力"),Range(0.01f,1)]
-    public float gravity=0.45f;
+    [Header("負重力"), Range(0.01f, 1)]
+    public float gravity = 0.45f;
     ///<summary>
     ///跳躍
     /// </summary>
     private void Jump()
     {
-        Collider2D hit = Physics2D.OverlapCircle(transform.position + groundOffest, groundRadius,1<<6); //也可用v3 1<<6 使用的圖層 [ <<位移運算子 1<<圖層編號 ]
+        Collider2D hit = Physics2D.OverlapCircle(transform.position + groundOffest, groundRadius, 1 << 6); //也可用v3 1<<6 使用的圖層 [ <<位移運算子 1<<圖層編號 ]
         if (hit)
         {
             print("碰到的物件 " + hit);
@@ -116,11 +119,11 @@ public class player : MonoBehaviour
         }
         else isground = false;
 
-        if (Input.GetKeyDown(KeyCode.K)&& jump2!=2)
+        if (Input.GetKeyDown(KeyCode.K) && jump2 != 2)
         {
             rig.velocity = Vector2.zero;
             jump2++;
-            rig.AddForce(new Vector2(0, playerjump*200));
+            rig.AddForce(new Vector2(0, playerjump * 200));
         }
         ani.SetBool("跳躍", !isground);
     }
@@ -133,10 +136,18 @@ public class player : MonoBehaviour
         {
             isatk = true;
             ani.SetTrigger("攻擊");
+
+            Collider2D hit = Physics2D.OverlapBox(transform.position + transform.right * v2攻擊區域.x + transform.up * v2攻擊區域.y, v3尺寸, 0, 1 << 8);
+            if (hit)
+            {
+                print(hit.name);
+                hit.GetComponent<怪物控制>().受傷(攻擊力);
+                StartCoroutine(cameraa.晃動());
+            }
         }
         if (isatk)
         {
-            if(timer< acd)
+            if (timer < acd)
             {
                 timer += Time.deltaTime;
                 //print("攻擊累加時間 " + timer);
@@ -155,7 +166,8 @@ public class player : MonoBehaviour
     public void Hurt(float 造成的傷害)
     {
         hp -= 造成的傷害;
-        if (hp<=0)
+        ani.SetTrigger("受傷");
+        if (hp <= 0)
         {
             Dead();
         }
@@ -169,6 +181,9 @@ public class player : MonoBehaviour
     {
         hp = 0;
         ani.SetBool("死亡", true);
+        GetComponent<CapsuleCollider2D>().enabled = false;
+        rig.velocity = Vector2.zero;
+        rig.constraints = RigidbodyConstraints2D.FreezeAll;
         enabled = false;
     }
     ///<summary>
@@ -177,14 +192,37 @@ public class player : MonoBehaviour
     /// ///<param name="道具名稱">撿起的道具名稱</param>
     private void ErtProp(string 道具名稱)
     {
-        print("吃到：" + 道具名稱);
+        switch (道具名稱)
+        {
+            case "掉落道具":
+                print("吃到：" + 道具名稱);
+                Destroy(hit掉落物,0.2f);
+                hp = Mathf.Clamp(hp, 0, 最大hp);
+                hp += 10;
+                血量hp.text = "血量 " + hp;
+                圖片hp.fillAmount = (hp / 最大hp);
+                break;
+            default:
+                break;
+        }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        ErtProp(collision.gameObject.tag);
+        hit掉落物 = collision.gameObject;
+    }
+    private GameObject hit掉落物;
     //繪製圖示事件
     private void OnDrawGizmos()
     {
         Gizmos.color = new Color(1, 0, 0, 0.3f);
         //Gizmos.DrawSphere(transform.position,2); //(中心點，半徑)
         Gizmos.DrawSphere(transform.position + groundOffest, groundRadius);
+        Gizmos.color = new Color(1, 0.3f, 0.1f, 0.3f);
+        Gizmos.DrawCube(transform.position + transform.right * v2攻擊區域.x + transform.up * v2攻擊區域.y, v3尺寸);
     }
     #endregion
+    [Header("攻擊區域")]
+    public Vector2 v2攻擊區域;
+    public Vector3 v3尺寸;
 }

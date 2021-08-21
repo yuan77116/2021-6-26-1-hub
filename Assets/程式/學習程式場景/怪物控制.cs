@@ -33,7 +33,7 @@ public class 怪物控制 : MonoBehaviour
     [Header("攻擊間隔，自訂攻擊數量")]
     public float[] atkdelay;
     [Header("攻擊完成回復")]
-    public float 攻擊回復=1;
+    public float 攻擊回復動作=1;
     //[Header("第二次攻擊間隔")]
     //public float[] atkdelay2;
     private float timeratk;
@@ -89,6 +89,7 @@ public class 怪物控制 : MonoBehaviour
         if (timeratk < cdatk)
         {
             timeratk += Time.deltaTime;
+            ani.SetBool("走路",false);
         }
         else
         {
@@ -175,9 +176,39 @@ public class 怪物控制 : MonoBehaviour
         else transform.eulerAngles = Vector3.zero;
 
     }
+    public void 受傷(float 傷害值)
+    {
+        hp -= 傷害值;
+        ani.SetTrigger("受傷");
+        if (hp <= 0)
+        {
+            死亡();
+        }
+    }
+    private void 死亡()
+    {
+        hp = 0;
+        ani.SetBool("死亡",true);
+        state = StateEnemy.dead;
+        GetComponent<CapsuleCollider2D>().enabled = false;
+        rig.velocity = Vector2.zero;
+        rig.constraints = RigidbodyConstraints2D.FreezeAll;
+        enabled = false;
+        掉落物();
+    }
     protected virtual void OnDrawGizmos()
     {
         Gizmos.color = new Color(1, 0.3f, 0.3f,0.3f);
         Gizmos.DrawSphere(transform.position+ transform.right * checkfoor.x + transform.up * checkfoor.y, checkfoorint);
+    }
+
+    public GameObject 寶物;
+    public float 掉落機率01 = 1;
+    private void 掉落物()
+    {
+        if(Random.value<= 掉落機率01)
+        {
+            Instantiate(寶物, transform.position + Vector3.up * 1.5f, Quaternion.identity);
+        }
     }
 }

@@ -51,7 +51,7 @@ public class 近戰怪物 : 怪物控制
             print("第一次攻擊");
             if (hit) playerh.Hurt(atk);
         }
-        yield return new WaitForSeconds(攻擊回復);
+        yield return new WaitForSeconds(攻擊回復動作);
         if (hit)
         {
             state = StateEnemy.atkkack;

@@ -1,4 +1,6 @@
 using UnityEngine;
+//----
+using System.Collections; 
 
 /// <summary>
 /// 攝影機追蹤玩家
@@ -45,5 +47,32 @@ public class Cameraa1a2 : MonoBehaviour
 
         transform.position = posResult;
     }
-
+    //---------------------------
+    [Header("晃動幅度")]
+    public float 晃動幅度 = 0.02f;
+    [Header("晃動次數")]
+    public int 晃動次數=5;
+    [Header("晃動間隔")]
+    public float 晃動間隔 =0.15f;
+    public IEnumerator 晃動()
+    {
+        Vector3 原始座標 = transform.position;
+        for (int i = 0; i < 晃動次數; i++)
+        {
+            Vector3 當下座標 = 原始座標;
+            if (i % 2 == 0)
+            {
+                當下座標.x -= 晃動幅度;
+                當下座標.y += 晃動幅度;
+            }
+            else
+            {
+                當下座標.x += 晃動幅度;
+                當下座標.y -= 晃動幅度;
+            }
+            transform.position = 當下座標;
+            yield return new WaitForSeconds(晃動間隔);
+        }
+        transform.position = 原始座標;
+    } 
 }
