@@ -195,6 +195,7 @@ public class 怪物控制 : MonoBehaviour
         rig.constraints = RigidbodyConstraints2D.FreezeAll;
         enabled = false;
         掉落物();
+        傳送門管理.怪物數量--;
     }
     protected virtual void OnDrawGizmos()
     {

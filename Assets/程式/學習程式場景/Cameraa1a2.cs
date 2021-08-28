@@ -74,5 +74,8 @@ public class Cameraa1a2 : MonoBehaviour
             yield return new WaitForSeconds(晃動間隔);
         }
         transform.position = 原始座標;
-    } 
+    }
+    //private Camera camera;
+    //camera = GameObject.Find("Main Camera").GetComponent<Cameraa1a2>();
+    //StartCoroutine(cameraa.晃動());
 }

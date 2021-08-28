@@ -25,5 +25,6 @@ public class SceneController : MonoBehaviour
     public void DelayOuitGame()
     {
         Invoke("OuitGame", 0.7f); //延遲讓音效播完
+        //Application.OpenURL("網址");
     }
 }

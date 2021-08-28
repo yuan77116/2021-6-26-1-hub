@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class player : MonoBehaviour
 {
+    public UnityEvent 死亡事件;
     #region 課堂練習
     [Header("攻擊力"), Range(0, 300)]
     public float 攻擊力 = 10;
@@ -55,6 +57,7 @@ public class player : MonoBehaviour
         //ErtProp("肉");
         rig = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
+        aud = GetComponent<AudioSource>();
         血量hp = GameObject.Find("文字血量").GetComponent<Text>();
         圖片hp = GameObject.Find("血條").GetComponent<Image>();
         最大hp = hp;
@@ -124,6 +127,7 @@ public class player : MonoBehaviour
             rig.velocity = Vector2.zero;
             jump2++;
             rig.AddForce(new Vector2(0, playerjump * 200));
+            aud.PlayOneShot(音效跳躍, Random.Range(0.7f, 1.1f)); //聲音大小
         }
         ani.SetBool("跳躍", !isground);
     }
@@ -185,6 +189,7 @@ public class player : MonoBehaviour
         rig.velocity = Vector2.zero;
         rig.constraints = RigidbodyConstraints2D.FreezeAll;
         enabled = false;
+        死亡事件.Invoke();
     }
     ///<summary>
     ///撿起的道具名
@@ -209,7 +214,11 @@ public class player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ErtProp(collision.gameObject.tag);
-        hit掉落物 = collision.gameObject;
+        if (collision.transform.tag == "掉落道具")
+        {
+            hit掉落物 = collision.gameObject;
+        }
+
     }
     private GameObject hit掉落物;
     //繪製圖示事件
@@ -225,4 +234,5 @@ public class player : MonoBehaviour
     [Header("攻擊區域")]
     public Vector2 v2攻擊區域;
     public Vector3 v3尺寸;
+    public AudioClip 音效跳躍;
 }
